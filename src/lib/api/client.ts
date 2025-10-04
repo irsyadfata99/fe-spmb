@@ -11,7 +11,6 @@ class ApiClient {
   constructor(baseURL: string) {
     this.baseURL = baseURL;
 
-    // Load token from localStorage on initialization
     if (typeof window !== "undefined") {
       this.token = localStorage.getItem("auth_token");
     }
@@ -35,9 +34,9 @@ class ApiClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      ...options.headers,
+      ...(options.headers as Record<string, string>),
     };
 
     if (this.token) {
@@ -114,7 +113,7 @@ class ApiClient {
     const formData = new FormData();
     formData.append(fieldName, file);
 
-    const headers: HeadersInit = {};
+    const headers: Record<string, string> = {};
     if (this.token) {
       headers["Authorization"] = `Bearer ${this.token}`;
     }
@@ -151,7 +150,6 @@ class ApiClient {
 
 export const apiClient = new ApiClient(API_URL);
 
-// src/lib/api/auth.ts
 export const authApi = {
   login: async (username: string, password: string) => {
     return apiClient.post("/auth/login", { username, password });
@@ -174,7 +172,6 @@ export const authApi = {
   },
 };
 
-// src/lib/api/registration.ts
 export const registrationApi = {
   search: async (nomorRegistrasi: string) => {
     return apiClient.get(`/registrations/search`, { nomorRegistrasi });
@@ -205,17 +202,14 @@ export const registrationApi = {
   },
 
   exportToExcel: async (params?: any) => {
-    // Will be implemented with actual backend
     return apiClient.get("/registrations/export", params);
   },
 
   downloadFiles: async (ids: string[]) => {
-    // Will be implemented with actual backend
     return apiClient.post("/registrations/download-files", { ids });
   },
 };
 
-// src/lib/api/forms.ts
 export const formsApi = {
   getActive: async () => {
     return apiClient.get("/forms/active");
@@ -246,7 +240,6 @@ export const formsApi = {
   },
 };
 
-// src/lib/api/settings.ts
 export const settingsApi = {
   getSchoolInfo: async () => {
     return apiClient.get("/settings/school");
@@ -301,7 +294,6 @@ export const settingsApi = {
   },
 };
 
-// src/lib/api/statistics.ts
 export const statisticsApi = {
   getDashboard: async () => {
     return apiClient.get("/statistics/dashboard");
