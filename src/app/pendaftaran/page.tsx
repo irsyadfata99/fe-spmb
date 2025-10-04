@@ -93,7 +93,7 @@ export default function RegistrationPage() {
         "YYYY",
         "-",
         3,
-        6
+        Math.floor(Math.random() * 1000) + 1
       );
 
       alert(
@@ -112,10 +112,9 @@ export default function RegistrationPage() {
 
     switch (field.type) {
       case "text":
-      case "email":
         return (
           <input
-            type={field.type}
+            type="text"
             value={formData[field.id] || ""}
             onChange={(e) => handleChange(field.id, e.target.value)}
             placeholder={field.placeholder}
